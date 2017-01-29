@@ -263,6 +263,7 @@
         'NODE_WANT_INTERNALS=1',
         # Warn when using deprecated V8 APIs.
         'V8_DEPRECATION_WARNINGS=1',
+        'V8_IMMINENT_DEPRECATION_WARNINGS=1'
       ],
     },
     {
