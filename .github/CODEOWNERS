@@ -1,0 +1,3 @@
+/lib/internal/streams/* @nodejs/streams
+/lib/_stream*           @nodejs/streams
+/lib/stream.js          @nodejs/streams
