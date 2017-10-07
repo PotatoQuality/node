@@ -49,6 +49,8 @@ from os.path import join, dirname, abspath, basename, isdir, exists
 from datetime import datetime
 from Queue import Queue, Empty
 
+from junit_output import JUnitTestOutput
+
 logger = logging.getLogger('testrunner')
 skip_regex = re.compile(r'# SKIP\S*\s+(.*)', re.IGNORECASE)
 
@@ -336,6 +338,45 @@ class TapProgressIndicator(SimpleProgressIndicator):
   def Done(self):
     pass
 
+
+class JUnitProgressIndicator(SimpleProgressIndicator):
+
+  def __init__(self, a, b):
+    super(JUnitProgressIndicator, self).__init__(a, b)
+    self.outputter = JUnitTestOutput("node")
+    #if junitout:
+    #  self.outfile = open(junitout, "w")
+    #else:
+    self.outfile = sys.stdout
+
+  def AboutToRun(self, case):
+    pass
+
+  def Done(self):
+    self.outputter.FinishAndWrite(self.outfile)
+    if self.outfile != sys.stdout:
+      self.outfile.close()
+
+  def HasRun(self, test, has_unexpected_output):
+    fail_text = ""
+    if has_unexpected_output:
+      stdout = test.output.stdout.strip()
+      if len(stdout):
+        fail_text += "stdout:\n%s\n" % stdout
+      stderr = test.output.stderr.strip()
+      if len(stderr):
+        fail_text += "stderr:\n%s\n" % stderr
+      fail_text += "Command: %s" % self._EscapeCommand(test)
+      if test.output.HasCrashed():
+        fail_text += "exit code: %d\n--- CRASHED ---" % test.output.exit_code
+      if test.output.HasTimedOut():
+        fail_text += "--- TIMEOUT ---"
+    self.outputter.HasRunTest(
+        [test.GetLabel()] + self.runner.context.mode_flags + test.flags,
+        test.duration,
+        fail_text)
+
+
 class DeoptsCheckProgressIndicator(SimpleProgressIndicator):
 
   def Starting(self):
@@ -460,7 +501,8 @@ PROGRESS_INDICATORS = {
   'color': ColorProgressIndicator,
   'tap': TapProgressIndicator,
   'mono': MonochromeProgressIndicator,
-  'deopts': DeoptsCheckProgressIndicator
+  'deopts': DeoptsCheckProgressIndicator,
+  'junit': JUnitProgressIndicator
 }
 
 
