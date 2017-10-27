@@ -250,7 +250,7 @@ bool OS::CommitRegion(void* address, size_t size, bool is_executable) {
     return false;
   }
 #else
-  if (mprotect(base, size, prot) == -1) return false;
+  if (mprotect(address, size, prot) == -1) return false;
 #endif  // !V8_OS_AIX
   return true;
 }
@@ -268,7 +268,7 @@ bool OS::UncommitRegion(void* address, size_t size) {
   return mmap(address, size, PROT_NONE, map_flags, kMmapFd, kMmapFdOffset) !=
          MAP_FAILED;
 #else   // V8_OS_AIX
-  return mprotect(base, size, PROT_NONE) != -1;
+  return mprotect(address, size, PROT_NONE) != -1;
 #endif  // V8_OS_AIX
 }
 
