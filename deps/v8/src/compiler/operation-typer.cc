@@ -133,7 +133,7 @@ namespace {
 // There must be at least one non-NaN element.
 // Any -0 is converted to 0.
 double array_min(double a[], size_t n) {
-  DCHECK(n != 0);
+  DCHECK_NE(0, n);
   double x = +V8_INFINITY;
   for (size_t i = 0; i < n; ++i) {
     if (!std::isnan(a[i])) {
@@ -148,7 +148,7 @@ double array_min(double a[], size_t n) {
 // There must be at least one non-NaN element.
 // Any -0 is converted to 0.
 double array_max(double a[], size_t n) {
-  DCHECK(n != 0);
+  DCHECK_NE(0, n);
   double x = -V8_INFINITY;
   for (size_t i = 0; i < n; ++i) {
     if (!std::isnan(a[i])) {
@@ -239,6 +239,18 @@ Type* OperationTyper::MultiplyRanger(Type* lhs, Type* rhs) {
       Type::Range(array_min(results, 4), array_max(results, 4), zone());
   return maybe_minuszero ? Type::Union(range, Type::MinusZero(), zone())
                          : range;
+}
+
+Type* OperationTyper::ConvertReceiver(Type* type) {
+  if (type->Is(Type::Receiver())) return type;
+  bool const maybe_primitive = type->Maybe(Type::Primitive());
+  type = Type::Intersect(type, Type::Receiver(), zone());
+  if (maybe_primitive) {
+    // ConvertReceiver maps null and undefined to the JSGlobalProxy of the
+    // target function, and all other primitives are wrapped into a JSValue.
+    type = Type::Union(type, Type::OtherObject(), zone());
+  }
+  return type;
 }
 
 Type* OperationTyper::ToNumber(Type* type) {
@@ -597,6 +609,26 @@ Type* OperationTyper::NumberSubtract(Type* lhs, Type* rhs) {
   if (maybe_minuszero) type = Type::Union(type, Type::MinusZero(), zone());
   if (maybe_nan) type = Type::Union(type, Type::NaN(), zone());
   return type;
+}
+
+Type* OperationTyper::SpeculativeSafeIntegerAdd(Type* lhs, Type* rhs) {
+  Type* result = SpeculativeNumberAdd(lhs, rhs);
+  // If we have a Smi or Int32 feedback, the representation selection will
+  // either truncate or it will check the inputs (i.e., deopt if not int32).
+  // In either case the result will be in the safe integer range, so we
+  // can bake in the type here. This needs to be in sync with
+  // SimplifiedLowering::VisitSpeculativeAdditiveOp.
+  return Type::Intersect(result, cache_.kSafeInteger, zone());
+}
+
+Type* OperationTyper::SpeculativeSafeIntegerSubtract(Type* lhs, Type* rhs) {
+  Type* result = SpeculativeNumberSubtract(lhs, rhs);
+  // If we have a Smi or Int32 feedback, the representation selection will
+  // either truncate or it will check the inputs (i.e., deopt if not int32).
+  // In either case the result will be in the safe integer range, so we
+  // can bake in the type here. This needs to be in sync with
+  // SimplifiedLowering::VisitSpeculativeAdditiveOp.
+  return result = Type::Intersect(result, cache_.kSafeInteger, zone());
 }
 
 Type* OperationTyper::NumberMultiply(Type* lhs, Type* rhs) {
@@ -987,18 +1019,6 @@ SPECULATIVE_NUMBER_BINOP(NumberShiftRight)
 SPECULATIVE_NUMBER_BINOP(NumberShiftRightLogical)
 #undef SPECULATIVE_NUMBER_BINOP
 
-Type* OperationTyper::SpeculativeSafeIntegerAdd(Type* lhs, Type* rhs) {
-  lhs = SpeculativeToNumber(lhs);
-  rhs = SpeculativeToNumber(rhs);
-  return NumberAdd(lhs, rhs);
-}
-
-Type* OperationTyper::SpeculativeSafeIntegerSubtract(Type* lhs, Type* rhs) {
-  lhs = SpeculativeToNumber(lhs);
-  rhs = SpeculativeToNumber(rhs);
-  return NumberSubtract(lhs, rhs);
-}
-
 Type* OperationTyper::SpeculativeToNumber(Type* type) {
   return ToNumber(Type::Intersect(type, Type::NumberOrOddball(), zone()));
 }
@@ -1034,7 +1054,7 @@ Type* OperationTyper::FalsifyUndefined(ComparisonOutcome outcome) {
                                             : singleton_false();
   }
   // Type should be non empty, so we know it should be true.
-  DCHECK((outcome & kComparisonTrue) != 0);
+  DCHECK_NE(0, outcome & kComparisonTrue);
   return singleton_true();
 }
 

@@ -27,6 +27,8 @@
   V(object_to_string, "[object Object]")                           \
   V(regexp_to_string, "[object RegExp]")                           \
   V(string_to_string, "[object String]")                           \
+  V(bigint_string, "bigint")                                       \
+  V(BigInt_string, "BigInt")                                       \
   V(bind_string, "bind")                                           \
   V(boolean_string, "boolean")                                     \
   V(Boolean_string, "Boolean")                                     \
@@ -147,6 +149,7 @@
   V(Proxy_string, "Proxy")                                         \
   V(query_colon_string, "(?:)")                                    \
   V(RangeError_string, "RangeError")                               \
+  V(raw_string, "raw")                                             \
   V(ReferenceError_string, "ReferenceError")                       \
   V(RegExp_string, "RegExp")                                       \
   V(reject_string, "reject")                                       \
@@ -158,10 +161,8 @@
   V(set_space_string, "set ")                                      \
   V(set_string, "set")                                             \
   V(Set_string, "Set")                                             \
-  V(source_mapping_url_string, "source_mapping_url")               \
   V(source_string, "source")                                       \
   V(sourceText_string, "sourceText")                               \
-  V(source_url_string, "source_url")                               \
   V(stack_string, "stack")                                         \
   V(stackTraceLimit_string, "stackTraceLimit")                     \
   V(star_default_star_string, "*default*")                         \
@@ -201,8 +202,7 @@
   V(will_handle_string, "willHandle")                              \
   V(writable_string, "writable")                                   \
   V(year_string, "year")                                           \
-  V(zero_string, "0")                                              \
-  V(WasmExceptionTag_string, "WasmExceptionTag")
+  V(zero_string, "0")
 
 #define PRIVATE_SYMBOL_LIST(V)              \
   V(array_iteration_kind_symbol)            \
@@ -212,8 +212,7 @@
   V(call_site_frame_index_symbol)           \
   V(console_context_id_symbol)              \
   V(console_context_name_symbol)            \
-  V(class_end_position_symbol)              \
-  V(class_start_position_symbol)            \
+  V(class_positions_symbol)                 \
   V(detailed_stack_trace_symbol)            \
   V(elements_transition_symbol)             \
   V(error_end_pos_symbol)                   \
@@ -310,6 +309,7 @@
   F(MC_FINISH)                                       \
   F(MC_MARK)                                         \
   F(MC_MARK_FINISH_INCREMENTAL)                      \
+  F(MC_MARK_MAIN)                                    \
   F(MC_MARK_ROOTS)                                   \
   F(MC_MARK_WEAK_CLOSURE)                            \
   F(MC_MARK_WEAK_CLOSURE_EPHEMERAL)                  \
@@ -348,6 +348,7 @@
   F(MINOR_MC_SWEEPING)                               \
   F(SCAVENGER_FAST_PROMOTE)                          \
   F(SCAVENGER_SCAVENGE)                              \
+  F(SCAVENGER_PROCESS_ARRAY_BUFFERS)                 \
   F(SCAVENGER_SCAVENGE_WEAK_GLOBAL_HANDLES_IDENTIFY) \
   F(SCAVENGER_SCAVENGE_WEAK_GLOBAL_HANDLES_PROCESS)  \
   F(SCAVENGER_SCAVENGE_PARALLEL)                     \
