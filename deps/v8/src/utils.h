@@ -6,7 +6,7 @@
 #define V8_UTILS_H_
 
 #if defined(V8_OS_AIX)
-#include <fenv.h>  // NOLINT(build/c++11)
+#include <cfenv>  // NOLINT(build/c++11)
 #endif
 #include <limits.h>
 #include <stdlib.h>
