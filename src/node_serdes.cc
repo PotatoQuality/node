@@ -20,6 +20,7 @@ using v8::Nothing;
 using v8::Object;
 using v8::SharedArrayBuffer;
 using v8::String;
+using v8::Undefined;
 using v8::Value;
 using v8::ValueDeserializer;
 using v8::ValueSerializer;
@@ -208,8 +209,24 @@ void SerializerContext::TransferArrayBuffer(
   Maybe<uint32_t> id = args[0]->Uint32Value(ctx->env()->context());
   if (id.IsNothing()) return;
 
-  if (!args[1]->IsArrayBuffer())
-    return ctx->env()->ThrowTypeError("arrayBuffer must be an ArrayBuffer");
+  if (!args[1]->IsArrayBuffer()) {
+    Environment* env = ctx->env();
+    Local<Context> context = env->context();
+    Isolate* isolate = env->isolate();
+    Local<Object> extras_binding = context->GetExtrasBindingObject();
+    Local<String> errors_name = String::NewFromUtf8(isolate, "errors");
+    Local<Object> errors_module = extras_binding->Get(context, errors_name).ToLocalChecked().As<Object>();
+    Local<String> error_type = String::NewFromUtf8(isolate, "TypeError");
+    Local<String> error_name = String::NewFromUtf8(isolate, "ERR_INVALID_ARG_TYPE");
+    Local<String> arg_name = String::NewFromUtf8(isolate, "arrayBuffer");
+    Local<String> array_buffer = String::NewFromUtf8(isolate, "ArrayBuffer");
+    Local<Value> arguments[] = {error_name, arg_name, array_buffer, args[1]};
+    Local<Function> error_ctor = errors_module->Get(context, error_type).ToLocalChecked().As<Function>();
+    MaybeLocal<Object> exception = error_ctor->NewInstance(context, arraysize(arguments), arguments);
+    if (exception.IsEmpty()) return;
+    isolate->ThrowException(exception.ToLocalChecked());
+    return;
+  }
 
   Local<ArrayBuffer> ab = args[1].As<ArrayBuffer>();
   ctx->serializer_.TransferArrayBuffer(id.FromJust(), ab);
