@@ -133,6 +133,12 @@
         }, {
           'toolsets': ['target'],
         }],
+        ['v8_enable_i18n_support==1', {
+          'dependencies': [
+            '<(icu_gyp_path):icui18n',
+            '<(icu_gyp_path):icuuc',
+          ],
+        }],
       ],
     },
     {
@@ -275,7 +281,12 @@
             '../src/builtins/s390/builtins-s390.cc',
           ],
         }],
-        ['v8_enable_i18n_support==0', {
+        ['v8_enable_i18n_support==1', {
+          'dependencies': [
+            '<(icu_gyp_path):icui18n',
+            '<(icu_gyp_path):icuuc',
+          ],
+        }, {
           'sources!': [
             '../src/builtins/builtins-intl-gen.cc',
           ],
@@ -396,6 +407,12 @@
             'BUILDING_V8_SHARED',
           ],
         }],
+        ['v8_enable_i18n_support==1', {
+          'dependencies': [
+            '<(icu_gyp_path):icui18n',
+            '<(icu_gyp_path):icuuc',
+          ],
+        }], 
       ]
     },
     {
