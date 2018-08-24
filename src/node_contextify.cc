@@ -898,7 +898,8 @@ class ContextifyScript : public BaseObject {
     }
 
     Local<String> decorated_stack = String::Concat(
-        String::Concat(arrow.As<String>(),
+        env->isolate(),
+        String::Concat(env->isolate(), arrow.As<String>(),
           FIXED_ONE_BYTE_STRING(env->isolate(), "\n")),
         stack.As<String>());
     err_obj->Set(env->stack_string(), decorated_stack);
