@@ -241,6 +241,7 @@
       'include_dirs': [
         'src',
         'deps/v8/include',
+        'deps/node-addon-api'
       ],
 
       # - "C4244: conversion from 'type1' to 'type2', possible loss of data"
@@ -950,6 +951,7 @@
           'include_dirs': [
             'src',
             'deps/v8/include',
+            'deps/node-addon-api'
           ],
           'sources': [
             '<@(library_files)',
