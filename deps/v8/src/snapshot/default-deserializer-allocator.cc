@@ -121,7 +121,7 @@ HeapObject* DefaultDeserializerAllocator::GetObject(AllocationSpace space,
 }
 
 void DefaultDeserializerAllocator::DecodeReservation(
-    std::vector<SerializedData::Reservation> res) {
+    const std::vector<SerializedData::Reservation>& res) {
   DCHECK_EQ(0, reservations_[FIRST_SPACE].size());
   int current_space = FIRST_SPACE;
   for (auto& r : res) {
@@ -155,10 +155,9 @@ bool DefaultDeserializerAllocator::ReserveSpace(
     BuiltinDeserializer* builtin_deserializer) {
   Isolate* isolate = startup_deserializer->isolate();
 
-  // Create a set of merged reservations to reserve space in one go.
-  // The BuiltinDeserializer's reservations are ignored, since our actual
-  // requirements vary based on whether lazy deserialization is enabled.
-  // Instead, we manually determine the required code-space.
+  // Create a set of merged reservations to reserve space in one go.  The
+  // BuiltinDeserializer's reservations are ignored. Instead, we manually
+  // determine the required code-space.
 
   Heap::Reservation merged_reservations[kNumberOfSpaces];
   for (int i = FIRST_SPACE; i < kNumberOfSpaces; i++) {
@@ -167,8 +166,7 @@ bool DefaultDeserializerAllocator::ReserveSpace(
   }
 
   Heap::Reservation builtin_reservations =
-      builtin_deserializer->allocator()
-          ->CreateReservationsForEagerBuiltinsAndHandlers();
+      builtin_deserializer->allocator()->CreateReservationsForEagerBuiltins();
   DCHECK(!builtin_reservations.empty());
 
   for (const auto& c : builtin_reservations) {
