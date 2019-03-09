@@ -1891,12 +1891,15 @@ algorithm names.
 <!-- YAML
 added: v10.12.0
 changes:
+  - version: REPLACEME
+    pr-url: https://github.com/nodejs/node/pull/26554
+    description: Add ability to generate Ed25519 and Ed448 key pairs.
   - version: v11.6.0
     pr-url: https://github.com/nodejs/node/pull/24234
     description: The `generateKeyPair` and `generateKeyPairSync` functions now
                  produce key objects if no encoding was specified.
 -->
-* `type`: {string} Must be `'rsa'`, `'dsa'` or `'ec'`.
+* `type`: {string} Must be `'rsa'`, `'dsa'`, `'ec'`, `'ed25519'`, or `'ed448'`.
 * `options`: {Object}
   - `modulusLength`: {number} Key size in bits (RSA, DSA).
   - `publicExponent`: {number} Public exponent (RSA). **Default:** `0x10001`.
@@ -1909,8 +1912,8 @@ changes:
   - `publicKey`: {string | Buffer | KeyObject}
   - `privateKey`: {string | Buffer | KeyObject}
 
-Generates a new asymmetric key pair of the given `type`. Only RSA, DSA and EC
-are currently supported.
+Generates a new asymmetric key pair of the given `type`. RSA, DSA, EC, Ed25519
+and Ed448 are currently supported.
 
 If a `publicKeyEncoding` or `privateKeyEncoding` was specified, this function
 behaves as if [`keyObject.export()`][] had been called on its result. Otherwise,
@@ -1948,12 +1951,15 @@ a `Promise` for an `Object` with `publicKey` and `privateKey` properties.
 <!-- YAML
 added: v10.12.0
 changes:
+  - version: REPLACEME
+    pr-url: https://github.com/nodejs/node/pull/26554
+    description: Add ability to generate Ed25519 and Ed448 key pairs.
   - version: v11.6.0
     pr-url: https://github.com/nodejs/node/pull/24234
     description: The `generateKeyPair` and `generateKeyPairSync` functions now
                  produce key objects if no encoding was specified.
 -->
-* `type`: {string} Must be `'rsa'`, `'dsa'` or `'ec'`.
+* `type`: {string} Must be `'rsa'`, `'dsa'`, `'ec'`, `'ed25519'`, or `'ed448'`.
 * `options`: {Object}
   - `modulusLength`: {number} Key size in bits (RSA, DSA).
   - `publicExponent`: {number} Public exponent (RSA). **Default:** `0x10001`.
@@ -1965,8 +1971,8 @@ changes:
   - `publicKey`: {string | Buffer | KeyObject}
   - `privateKey`: {string | Buffer | KeyObject}
 
-Generates a new asymmetric key pair of the given `type`. Only RSA, DSA and EC
-are currently supported.
+Generates a new asymmetric key pair of the given `type`. RSA, DSA, EC, Ed25519
+and Ed448 are currently supported.
 
 If a `publicKeyEncoding` or `privateKeyEncoding` was specified, this function
 behaves as if [`keyObject.export()`][] had been called on its result. Otherwise,
