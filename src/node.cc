@@ -268,11 +268,15 @@ MaybeLocal<Value> RunBootstrapping(Environment* env) {
 
   // Store primordials
   env->set_primordials(Object::New(isolate));
+  Local<Context> primordials_context = Context::New(isolate);
+  primordials_context->SetSecurityToken(env->context()->GetSecurityToken());
   std::vector<Local<String>> primordials_params = {
-    env->primordials_string()
+    env->primordials_string(),
+    FIXED_ONE_BYTE_STRING(isolate, "safeGlobal")
   };
   std::vector<Local<Value>> primordials_args = {
-    env->primordials()
+    env->primordials(),
+    primordials_context->Global()
   };
 
 #if HAVE_INSPECTOR
