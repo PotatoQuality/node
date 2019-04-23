@@ -208,6 +208,12 @@ void FixedArray::MoveElements(Heap* heap, int dst_index, int src_index, int len,
   heap->MoveElements(*this, dst_index, src_index, len, mode);
 }
 
+void FixedArray::CopyElements(Heap* heap, int dst_index, FixedArray src,
+                              int src_index, int len, WriteBarrierMode mode) {
+  DisallowHeapAllocation no_gc;
+  heap->CopyElements(*this, src, dst_index, src_index, len, mode);
+}
+
 // Perform a binary search in a fixed array.
 template <SearchMode search_mode, typename T>
 int BinarySearch(T* array, Name name, int valid_entries,
@@ -543,9 +549,9 @@ PodArray<T> PodArray<T>::cast(Object object) {
 // static
 template <class T>
 Handle<PodArray<T>> PodArray<T>::New(Isolate* isolate, int length,
-                                     PretenureFlag pretenure) {
+                                     AllocationType allocation) {
   return Handle<PodArray<T>>::cast(
-      isolate->factory()->NewByteArray(length * sizeof(T), pretenure));
+      isolate->factory()->NewByteArray(length * sizeof(T), allocation));
 }
 
 template <class T>
@@ -635,7 +641,9 @@ double Float64ArrayTraits::defaultValue() {
 
 template <class Traits>
 typename Traits::ElementType FixedTypedArray<Traits>::get_scalar(int index) {
-  DCHECK((index >= 0) && (index < this->length()));
+  // TODO(bmeurer, v8:4153): Solve this differently.
+  // DCHECK((index < this->length()));
+  CHECK_GE(index, 0);
   return FixedTypedArray<Traits>::get_scalar_from_data_ptr(DataPtr(), index);
 }
 
@@ -670,7 +678,9 @@ typename Traits::ElementType FixedTypedArray<Traits>::get_scalar_from_data_ptr(
 
 template <class Traits>
 void FixedTypedArray<Traits>::set(int index, ElementType value) {
-  CHECK((index >= 0) && (index < this->length()));
+  // TODO(bmeurer, v8:4153): Solve this differently.
+  // CHECK((index < this->length()));
+  CHECK_GE(index, 0);
   // See the comment in FixedTypedArray<Traits>::get_scalar.
   auto* ptr = reinterpret_cast<ElementType*>(DataPtr());
   TSAN_ANNOTATE_IGNORE_WRITES_BEGIN;

@@ -69,7 +69,6 @@ void Builtins::Generate_InternalArrayConstructor(MacroAssembler* masm) {
 static void GenerateTailCallToReturnedCode(MacroAssembler* masm,
                                            Runtime::FunctionId function_id) {
   // ----------- S t a t e -------------
-  //  -- x0 : argument count (preserved for callee)
   //  -- x1 : target function (preserved for callee)
   //  -- x3 : new target (preserved for callee)
   // -----------------------------------
@@ -77,16 +76,14 @@ static void GenerateTailCallToReturnedCode(MacroAssembler* masm,
     FrameScope scope(masm, StackFrame::INTERNAL);
     // Push a copy of the target function and the new target.
     // Push another copy as a parameter to the runtime call.
-    __ SmiTag(x0);
-    __ Push(x0, x1, x3, padreg);
+    __ Push(x1, x3);
     __ PushArgument(x1);
 
     __ CallRuntime(function_id, 1);
     __ Mov(x2, x0);
 
     // Restore target function and new target.
-    __ Pop(padreg, x3, x1, x0);
-    __ SmiUntag(x0);
+    __ Pop(x3, x1);
   }
 
   static_assert(kJavaScriptCallCodeStartRegister == x2, "ABI mismatch");
@@ -999,13 +996,11 @@ static void MaybeTailCallOptimizedCodeSlot(MacroAssembler* masm,
                                            Register scratch1, Register scratch2,
                                            Register scratch3) {
   // ----------- S t a t e -------------
-  //  -- x0 : argument count (preserved for callee if needed, and caller)
   //  -- x3 : new target (preserved for callee if needed, and caller)
   //  -- x1 : target function (preserved for callee if needed, and caller)
   //  -- feedback vector (preserved for caller if needed)
   // -----------------------------------
-  DCHECK(
-      !AreAliased(feedback_vector, x0, x1, x3, scratch1, scratch2, scratch3));
+  DCHECK(!AreAliased(feedback_vector, x1, x3, scratch1, scratch2, scratch3));
 
   Label optimized_code_slot_is_weak_ref, fallthrough;
 
@@ -1069,10 +1064,10 @@ static void MaybeTailCallOptimizedCodeSlot(MacroAssembler* masm,
         scratch2,
         FieldMemOperand(optimized_code_entry, Code::kCodeDataContainerOffset));
     __ Ldr(
-        scratch2,
+        scratch2.W(),
         FieldMemOperand(scratch2, CodeDataContainer::kKindSpecificFlagsOffset));
-    __ TestAndBranchIfAnySet(scratch2, 1 << Code::kMarkedForDeoptimizationBit,
-                             &found_deoptimized_code);
+    __ Tbnz(scratch2.W(), Code::kMarkedForDeoptimizationBit,
+            &found_deoptimized_code);
 
     // Optimized code is good, get it into the closure and link the closure into
     // the optimized functions list, then tail call the optimized code.
@@ -1193,8 +1188,11 @@ void Builtins::Generate_InterpreterEntryTrampoline(MacroAssembler* masm) {
   Label push_stack_frame;
   // Check if feedback vector is valid. If valid, check for optimized code
   // and update invocation count. Otherwise, setup the stack frame.
-  __ CompareRoot(feedback_vector, RootIndex::kUndefinedValue);
-  __ B(eq, &push_stack_frame);
+  __ LoadTaggedPointerField(
+      x7, FieldMemOperand(feedback_vector, HeapObject::kMapOffset));
+  __ Ldrh(x7, FieldMemOperand(x7, Map::kInstanceTypeOffset));
+  __ Cmp(x7, FEEDBACK_VECTOR_TYPE);
+  __ B(ne, &push_stack_frame);
 
   // Read off the optimized code slot in the feedback vector, and if there
   // is optimized code or an optimization marker, call that instead.
@@ -1217,9 +1215,14 @@ void Builtins::Generate_InterpreterEntryTrampoline(MacroAssembler* masm) {
   __ Add(fp, sp, StandardFrameConstants::kFixedFrameSizeFromFp);
 
   // Reset code age.
-  __ Mov(x10, Operand(BytecodeArray::kNoAgeBytecodeAge));
-  __ Strb(x10, FieldMemOperand(kInterpreterBytecodeArrayRegister,
-                               BytecodeArray::kBytecodeAgeOffset));
+  // Reset code age and the OSR arming. The OSR field and BytecodeAgeOffset are
+  // 8-bit fields next to each other, so we could just optimize by writing a
+  // 16-bit. These static asserts guard our assumption is valid.
+  STATIC_ASSERT(BytecodeArray::kBytecodeAgeOffset ==
+                BytecodeArray::kOSRNestingLevelOffset + kCharSize);
+  STATIC_ASSERT(BytecodeArray::kNoAgeBytecodeAge == 0);
+  __ Strh(wzr, FieldMemOperand(kInterpreterBytecodeArrayRegister,
+                               BytecodeArray::kOSRNestingLevelOffset));
 
   // Load the initial bytecode offset.
   __ Mov(kInterpreterBytecodeOffsetRegister,
@@ -1278,15 +1281,9 @@ void Builtins::Generate_InterpreterEntryTrampoline(MacroAssembler* masm) {
   __ Mov(
       kInterpreterDispatchTableRegister,
       ExternalReference::interpreter_dispatch_table_address(masm->isolate()));
-#if defined(V8_OS_WIN)
   __ Ldrb(x23, MemOperand(kInterpreterBytecodeArrayRegister,
                           kInterpreterBytecodeOffsetRegister));
   __ Mov(x1, Operand(x23, LSL, kSystemPointerSizeLog2));
-#else
-  __ Ldrb(x18, MemOperand(kInterpreterBytecodeArrayRegister,
-                          kInterpreterBytecodeOffsetRegister));
-  __ Mov(x1, Operand(x18, LSL, kSystemPointerSizeLog2));
-#endif
   __ Ldr(kJavaScriptCallCodeStartRegister,
          MemOperand(kInterpreterDispatchTableRegister, x1));
   __ Call(kJavaScriptCallCodeStartRegister);
@@ -1531,15 +1528,9 @@ static void Generate_InterpreterEnterBytecode(MacroAssembler* masm) {
   __ SmiUntag(kInterpreterBytecodeOffsetRegister);
 
   // Dispatch to the target bytecode.
-#if defined(V8_OS_WIN)
   __ Ldrb(x23, MemOperand(kInterpreterBytecodeArrayRegister,
                           kInterpreterBytecodeOffsetRegister));
   __ Mov(x1, Operand(x23, LSL, kSystemPointerSizeLog2));
-#else
-  __ Ldrb(x18, MemOperand(kInterpreterBytecodeArrayRegister,
-                          kInterpreterBytecodeOffsetRegister));
-  __ Mov(x1, Operand(x18, LSL, kSystemPointerSizeLog2));
-#endif
   __ Ldr(kJavaScriptCallCodeStartRegister,
          MemOperand(kInterpreterDispatchTableRegister, x1));
   __ Jump(kJavaScriptCallCodeStartRegister);
