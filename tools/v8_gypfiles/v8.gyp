@@ -2529,6 +2529,9 @@
       ],
       'cflags_cc!': ['-fno-exceptions'],
       'cflags_cc': ['-fexceptions'],
+      'xcode_settings': {
+        'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',        # -fexceptions
+      },
       'msvs_settings': {
         'VCCLCompilerTool': {
           'RuntimeTypeInfo': 'true',
