@@ -645,7 +645,7 @@ void JSObject::JSObjectVerify(Isolate* isolate) {
   // pointer may point to a one pointer filler map.
   if (ElementsAreSafeToExamine()) {
     CHECK_EQ((map()->has_fast_smi_or_object_elements() ||
-              map()->is_frozen_or_sealed_elements() ||
+              map()->has_frozen_or_sealed_elements() ||
               (elements() == GetReadOnlyRoots().empty_fixed_array()) ||
               HasFastStringWrapperElements()),
              (elements()->map() == GetReadOnlyRoots().fixed_array_map() ||
@@ -1019,8 +1019,6 @@ void String::StringVerify(Isolate* isolate) {
   CHECK(IsString());
   CHECK(length() >= 0 && length() <= Smi::kMaxValue);
   CHECK_IMPLIES(length() == 0, *this == ReadOnlyRoots(isolate).empty_string());
-  CHECK_EQ(*this == ReadOnlyRoots(isolate).empty_string(),
-           map() == ReadOnlyRoots(isolate).empty_string_map());
   if (IsInternalizedString()) {
     CHECK(!ObjectInYoungGeneration(*this));
   }
@@ -1035,8 +1033,8 @@ void String::StringVerify(Isolate* isolate) {
 
 void ConsString::ConsStringVerify(Isolate* isolate) {
   CHECK(this->first()->IsString());
-  CHECK(this->second()->IsString());
-  CHECK_GT(this->first()->length(), 0);
+  CHECK(this->second() == ReadOnlyRoots(isolate).empty_string() ||
+        this->second()->IsString());
   CHECK_GE(this->length(), ConsString::kMinLength);
   CHECK(this->length() == this->first()->length() + this->second()->length());
   if (this->IsFlat()) {

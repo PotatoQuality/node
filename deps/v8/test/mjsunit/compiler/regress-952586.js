@@ -2,10 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Flags: --allow-natives-syntax --verify-heap
+// Flags: --allow-natives-syntax
 
-function foo(s) { return s + '0123456789012'; }
-foo('a');
-foo('\u1000');
-%OptimizeFunctionOnNextCall(foo);
-foo('');
+a = new Int8Array(1);
+
+function f(i) {
+  return i in a;
+}
+
+assertTrue(f(0));
+%OptimizeFunctionOnNextCall(f);
+assertFalse(f(-1));
