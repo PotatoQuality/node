@@ -660,13 +660,6 @@
         'v8_libbase',
         'v8_libplatform',
       ],
-      'include_dirs': [
-        '<(torque_output_root)',
-        '<(generate_bytecode_output_root)',
-        '<(icu_path)/source/common',
-        '<(icu_path)/source/i18n',
-        '<(icu_path)/source/tools/toolutil',
-      ],
       'sources': [
         '<(V8_ROOT)/src/setup-isolate-deserialize.cc',
         './extras-libraries.cc',
@@ -2737,7 +2730,7 @@
     # }, # wee8
 
     # ###############################################################################
-    # # Executables
+    # # Executablesicu_path
     # #
 
     {
