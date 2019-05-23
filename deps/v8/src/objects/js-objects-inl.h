@@ -861,6 +861,27 @@ NumberDictionary JSObject::element_dictionary() {
   return NumberDictionary::cast(elements());
 }
 
+template <typename Dictionary>
+void JSObject::ApplyAttributesToDictionary(
+    Isolate* isolate, ReadOnlyRoots roots, Handle<Dictionary> dictionary,
+    const PropertyAttributes attributes) {
+  int capacity = dictionary->Capacity();
+  for (int i = 0; i < capacity; i++) {
+    Object k;
+    if (!dictionary->ToKey(roots, i, &k)) continue;
+    if (k->FilterKey(ALL_PROPERTIES)) continue;
+    PropertyDetails details = dictionary->DetailsAt(i);
+    int attrs = attributes;
+    // READ_ONLY is an invalid attribute for JS setters/getters.
+    if ((attributes & READ_ONLY) && details.kind() == kAccessor) {
+      Object v = dictionary->ValueAt(i);
+      if (v->IsAccessorPair()) attrs &= ~READ_ONLY;
+    }
+    details = details.CopyAddAttributes(static_cast<PropertyAttributes>(attrs));
+    dictionary->DetailsAtPut(isolate, i, details);
+  }
+}
+
 void JSReceiver::initialize_properties() {
   ReadOnlyRoots roots = GetReadOnlyRoots();
   DCHECK(!ObjectInYoungGeneration(roots.empty_fixed_array()));
