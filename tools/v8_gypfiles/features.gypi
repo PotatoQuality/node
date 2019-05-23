@@ -34,16 +34,28 @@
     'v8_current_cpu%': '<(target_arch)',
 
     # Emulate GN variables
+    # https://chromium.googlesource.com/chromium/src/build/+/556c524beb09c332698debe1b47b065d5d029cd0/config/BUILDCONFIG.gn#269
     'conditions': [
-      ['OS != "win" and OS != "solaris" and OS != "fuchsia"', {
-        'is_posix': 1,
+      ['OS == "win" or OS == "winuwp"', {
+        'is_win': 1,
       }, {
-        'is_posix': 0,
+        'is_win': 0,
+      }],
+      ['OS == "fuchsia"', {
+        'is_fuchsia': 1,
+      }, {
+        'is_fuchsia': 0,
       }],
       ['OS=="android"', { # GYP reverts OS to linux so use `-D OS=android`
         'is_android': 1,
       }, {
         'is_android': 0,
+      }],
+      # flattened (!is_win && !is_fuchsia) because of GYP evaluation order
+      ['not (OS == "win" or OS == "winuwp") and not (OS == "fuchsia")', {
+        'is_posix': 1,
+      }, {
+        'is_posix': 0,
       }],
       ['component and "library" in component', {
         'is_component_build': 1,
