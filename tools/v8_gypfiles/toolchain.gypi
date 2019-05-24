@@ -135,6 +135,8 @@
     # Indicates if gcmole tools are downloaded by a hook.
     'gcmole%': 0,
   },
+
+  # [GYP] this needs to be outside of the top level 'variables'
   'conditions': [
     ['host_arch=="ia32" or host_arch=="x64" or \
       host_arch=="ppc" or host_arch=="ppc64" or \
@@ -166,11 +168,6 @@
       '<(V8_ROOT)/include',
     ],
     'conditions': [
-      ['want_separate_host_toolset', {
-        'toolsets': ['host', 'target'],
-      }, {
-        'toolsets': ['target'],
-      }],
       ['v8_target_arch=="arm"', {
         'defines': [
           'V8_TARGET_ARCH_ARM',
@@ -1094,7 +1091,7 @@
               }],
              ],
            }],
-           ['_toolset=="target"', {
+          ['_toolset=="target"', {
              'conditions': [
                ['target_cxx_is_biarch==1', {
                  'cflags': [ '-m64' ],
