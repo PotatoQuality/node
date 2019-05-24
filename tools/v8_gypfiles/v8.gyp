@@ -344,13 +344,13 @@
       'type': 'none',
       'conditions': [
         ['want_separate_host_toolset', {
+          'dependencies': ['torque#host'],
           'toolsets': ['host', 'target'],
+        }, {
+          'dependencies': ['torque'],
         }],
       ],
       'hard_dependency': 1,
-      'dependencies': [
-        'torque#host',
-      ],
       'direct_dependant_settings': {
         'include_dirs': [
           '<(torque_output_root)',
@@ -452,11 +452,11 @@
       'hard_dependency': 1,
       'conditions': [
         ['want_separate_host_toolset', {
+          'dependencies': ['bytecode_builtins_list_generator#host'],
           'toolsets': ['host', 'target'],
+        }, {
+          'dependencies': ['bytecode_builtins_list_generator'],
         }],
-      ],
-      'dependencies': [
-        'bytecode_builtins_list_generator#host',
       ],
       'direct_dependent_settings': {
         'sources': [
@@ -689,17 +689,32 @@
       'target_name': 'v8_snapshot',
       'type': 'static_library',
       'toolsets': ['target'],
-      'dependencies': [
-        'generate_bytecode_builtins_list',
-        'run_torque',
-        'mksnapshot#host',
-        'v8_maybe_icu',
-
-        # [GYP] added explicitly, instead of inheriting from the other deps
-        'v8_base_without_compiler',
-        'v8_compiler_for_mksnapshot',
-        'v8_initializers',
-        'v8_libplatform',
+      'conditions': [
+        ['want_separate_host_toolset', {
+          'dependencies': [
+            'generate_bytecode_builtins_list',
+            'run_torque',
+            'mksnapshot#host',
+            'v8_maybe_icu',
+            # [GYP] added explicitly, instead of inheriting from the other deps
+            'v8_base_without_compiler',
+            'v8_compiler_for_mksnapshot',
+            'v8_initializers',
+            'v8_libplatform',
+          ]
+        }, {
+          'dependencies': [
+            'generate_bytecode_builtins_list',
+            'run_torque',
+            'mksnapshot',
+            'v8_maybe_icu',
+            # [GYP] added explicitly, instead of inheriting from the other deps
+            'v8_base_without_compiler',
+            'v8_compiler_for_mksnapshot',
+            'v8_initializers',
+            'v8_libplatform',
+          ]
+        }],
       ],
       'sources': [
         '<(V8_ROOT)/src/setup-isolate-deserialize.cc',
@@ -2844,7 +2859,11 @@
     {
       'target_name': 'bytecode_builtins_list_generator',
       'type': 'executable',
-      'toolsets': ['host'],
+      'conditions': [
+        ['want_separate_host_toolset', {
+          'toolsets': ['host'],
+        }],
+      ],
       'dependencies': [
         "v8_libbase",
         # "build/win:default_exe_manifest",
@@ -2860,7 +2879,6 @@
     {
       'target_name': 'mksnapshot',
       'type': 'executable',
-      'toolsets': ['host'],
       'dependencies': [
         'v8_base_without_compiler',
         'v8_compiler_for_mksnapshot',
@@ -2889,15 +2907,22 @@
             '<(_msvs_precompiled_source)',
           ],
         }],
+        ['want_separate_host_toolset', {
+          'toolsets': ['host'],
+        }],
       ],
     },  # mksnapshot
     {
       'target_name': 'torque',
       'type': 'executable',
-      'toolsets': ['host'],
       'dependencies': [
         'torque_base',
         # "build/win:default_exe_manifest",
+      ],
+      'conditions': [
+        ['want_separate_host_toolset', {
+          'toolsets': ['host'],
+        }],
       ],
       'defines!': [
         '_HAS_EXCEPTIONS=0',
@@ -2928,7 +2953,11 @@
     {
       'target_name': 'torque-language-server',
       'type': 'executable',
-      'toolsets': ['host'],
+      'conditions': [
+        ['want_separate_host_toolset', {
+          'toolsets': ['host'],
+        }],
+      ],
       'dependencies': [
         'torque_base',
         'torque_ls_base',
