@@ -351,7 +351,7 @@
         }],
       ],
       'hard_dependency': 1,
-      'direct_dependant_settings': {
+      'direct_dependent_settings': {
         'include_dirs': [
           '<(torque_output_root)',
         ],
@@ -437,7 +437,7 @@
         'run_torque',
         'v8_maybe_icu',
       ],
-      'direct_dependant_settings': {
+      'direct_dependent_settings': {
         'sources': [
           '<(torque_output_root)/torque-generated/objects-printer-from-dsl.cc',
         ],
