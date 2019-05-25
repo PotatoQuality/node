@@ -70,7 +70,7 @@
     # https://github.com/nodejs/node/pull/22920/files#r222779926
     'v8_enable_fast_mksnapshot': 0,
 
-    'v8_win64_unwinding_info': 1,
+    'v8_win64_unwinding_info': 0,
 
     # TODO(refack): make v8-perfetto happen
     'v8_use_perfetto': 0,
