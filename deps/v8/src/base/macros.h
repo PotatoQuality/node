@@ -415,9 +415,9 @@ bool is_inbounds(float_t v) {
 #ifdef V8_OS_WIN
 
 // Setup for Windows shared library export.
-#ifdef BUILDING_V8_SHARED
+#ifdef BUILDING_V8_SHARED_COMPONENTS
 #define V8_EXPORT_PRIVATE __declspec(dllexport)
-#elif USING_V8_SHARED
+#elif USING_V8_SHARED_COMPONENTS
 #define V8_EXPORT_PRIVATE __declspec(dllimport)
 #else
 #define V8_EXPORT_PRIVATE
