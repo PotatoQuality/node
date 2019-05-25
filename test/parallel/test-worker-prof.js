@@ -24,12 +24,14 @@ if (process.argv[2] === 'child') {
   const { Worker, parentPort  } = require('worker_threads');
   console.log('worker | in worker')
   parentPort.on('message', (m) => {
+    console.log('worker | received message')
     if (counter++ === 1024) {
       console.log('worker | end')
       process.exit(0);
      }
      parentPort.postMessage(
        m.toString().split('').reverse().toString().replace(/,/g, ''));
+       console.log('worker | posted message')
   });
   `;
 
@@ -38,7 +40,9 @@ if (process.argv[2] === 'child') {
   const w = new Worker(pingpong, { eval: true });
   console.log('child | created worker')
   w.on('message', (m) => {
+    console.log('child | received message')
     w.postMessage(m.toString().split('').reverse().toString().replace(/,/g, ''));
+    console.log('child | posted message')
   });
 
   w.on('exit', common.mustCall(() => {
