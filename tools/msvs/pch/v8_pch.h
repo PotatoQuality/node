@@ -9,3 +9,11 @@
 #include "src/objects/fixed-array-inl.h"
 #include "src/utils.h"
 #include "src/vector.h"
+
+
+#include <algorithm>
+#include <cstring>
+#include <iterator>
+#include <iosfwd>
+#include <memory>
+#include <string>
