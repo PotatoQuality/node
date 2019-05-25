@@ -318,14 +318,13 @@
       ['OS == "win"', {
         'defines': [
           'WIN32',
-          # we don't really want VC++ warning us about
-          # how dangerous C functions are...
+          # We don't really want VC++ warning us about how dangerous C functions are...
           '_CRT_SECURE_NO_DEPRECATE',
-          # ... or that C implementations shouldn't use
-          # POSIX names
+          # ... or that C implementations shouldn't use POSIX names.
           '_CRT_NONSTDC_NO_DEPRECATE',
-          # Make sure the STL doesn't try to use exceptions
+          # Make sure the STL doesn't try to use exceptions.
           '_HAS_EXCEPTIONS=0',
+          # Trigger public APIs to be `__declspec(dllexport)` for embedders.
           'BUILDING_V8_SHARED=1',
           'BUILDING_UV_SHARED=1',
         ],
