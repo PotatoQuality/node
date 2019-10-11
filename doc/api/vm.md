@@ -85,8 +85,8 @@ changes:
   * `importModuleDynamically` {Function} Called during evaluation of this module
     when `import()` is called. If this option is not specified, calls to
     `import()` will reject with [`ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING`][].
-    This option is part of the experimental API for the `--experimental-modules`
-    flag, and should not be considered stable.
+    This option is part of the experimental modules API, and should not be
+    considered stable.
     * `specifier` {string} specifier passed to `import()`
     * `module` {vm.Module}
     * Returns: {Module Namespace Object|vm.Module} Returning a `vm.Module` is
@@ -850,8 +850,8 @@ changes:
   * `importModuleDynamically` {Function} Called during evaluation of this module
     when `import()` is called. If this option is not specified, calls to
     `import()` will reject with [`ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING`][].
-    This option is part of the experimental API for the `--experimental-modules`
-    flag, and should not be considered stable.
+    This option is part of the experimental modules API, and should not be
+    considered stable.
     * `specifier` {string} specifier passed to `import()`
     * `module` {vm.Module}
     * Returns: {Module Namespace Object|vm.Module} Returning a `vm.Module` is
@@ -946,8 +946,8 @@ changes:
   * `importModuleDynamically` {Function} Called during evaluation of this module
     when `import()` is called. If this option is not specified, calls to
     `import()` will reject with [`ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING`][].
-    This option is part of the experimental API for the `--experimental-modules`
-    flag, and should not be considered stable.
+    This option is part of the experimental modules API, and should not be
+    considered stable.
     * `specifier` {string} specifier passed to `import()`
     * `module` {vm.Module}
     * Returns: {Module Namespace Object|vm.Module} Returning a `vm.Module` is
@@ -1022,8 +1022,8 @@ changes:
   * `importModuleDynamically` {Function} Called during evaluation of this module
     when `import()` is called. If this option is not specified, calls to
     `import()` will reject with [`ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING`][].
-    This option is part of the experimental API for the `--experimental-modules`
-    flag, and should not be considered stable.
+    This option is part of the experimental modules API, and should not be
+    considered stable.
     * `specifier` {string} specifier passed to `import()`
     * `module` {vm.Module}
     * Returns: {Module Namespace Object|vm.Module} Returning a `vm.Module` is

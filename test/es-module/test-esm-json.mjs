@@ -1,4 +1,4 @@
-// Flags: --experimental-modules --experimental-json-modules
+// Flags: --experimental-json-modules
 import '../common/index.mjs';
 import { path } from '../common/fixtures.mjs';
 import { strictEqual, ok } from 'assert';
