@@ -1219,12 +1219,6 @@ void Environment::RemoveCleanupHook(void (*fn)(void*), void* arg) {
   cleanup_hooks_.erase(search);
 }
 
-inline void Environment::RegisterFinalizationGroupForCleanup(
-    v8::Local<v8::FinalizationGroup> group) {
-  cleanup_finalization_groups_.emplace_back(isolate(), group);
-  uv_async_send(&task_queues_async_);
-}
-
 size_t CleanupHookCallback::Hash::operator()(
     const CleanupHookCallback& cb) const {
   return std::hash<void*>()(cb.arg_);
