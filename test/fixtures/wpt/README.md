@@ -10,13 +10,13 @@ See [test/wpt](../../wpt/README.md) for information on how these tests are run.
 
 Last update:
 
-- console: https://github.com/web-platform-tests/wpt/tree/9786a4b131/console
-- encoding: https://github.com/web-platform-tests/wpt/tree/5059d2c777/encoding
-- url: https://github.com/web-platform-tests/wpt/tree/418f7fabeb/url
-- resources: https://github.com/web-platform-tests/wpt/tree/e1fddfbf80/resources
-- interfaces: https://github.com/web-platform-tests/wpt/tree/712c9f275e/interfaces
-- html/webappapis/microtask-queuing: https://github.com/web-platform-tests/wpt/tree/0c3bed38df/html/webappapis/microtask-queuing
-- html/webappapis/timers: https://github.com/web-platform-tests/wpt/tree/ddfe9c089b/html/webappapis/timers
+- console: https://github.com/web-platform-tests/wpt/tree/b0daaa6b86/console
+- encoding: https://github.com/web-platform-tests/wpt/tree/769704e890/encoding
+- url: https://github.com/web-platform-tests/wpt/tree/e9a106175a/url
+- resources: https://github.com/web-platform-tests/wpt/tree/027bdebf6a/resources
+- interfaces: https://github.com/web-platform-tests/wpt/tree/8ada332aea/interfaces
+- html/webappapis/microtask-queuing: https://github.com/web-platform-tests/wpt/tree/2c5c3c4c27/html/webappapis/microtask-queuing
+- html/webappapis/timers: https://github.com/web-platform-tests/wpt/tree/264f12bc7b/html/webappapis/timers
 
 [Web Platform Tests]: https://github.com/web-platform-tests/wpt
 [`git node wpt`]: https://github.com/nodejs/node-core-utils/blob/master/docs/git-node.md#git-node-wpt
