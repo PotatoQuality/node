@@ -26,5 +26,9 @@
   "html/webappapis/timers": {
     "commit": "ddfe9c089bab565a9d3aa37bdef63d8012c1a94c",
     "path": "html/webappapis/timers"
+  },
+  "performance-timeline": {
+    "commit": "61ff187c8d4548f996194b311449b62519a56c1e",
+    "path": "performance-timeline"
   }
 }
