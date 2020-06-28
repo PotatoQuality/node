@@ -41,27 +41,18 @@
 
 ### Notable Changes
 
-* [[`4e42eb5e14`](https://github.com/nodejs/node/commit/4e42eb5e14)] - **(SEMVER-MINOR)** **worker**: add public method for marking objects as untransferable (Anna Henningsen) [#33979](https://github.com/nodejs/node/pull/33979)
-* [[`e3fd2f5a48`](https://github.com/nodejs/node/commit/e3fd2f5a48)] - **(SEMVER-MINOR)** **http2**: return this for Http2ServerRequest#setTimeout (Pranshu Srivastava) [#33994](https://github.com/nodejs/node/pull/33994)
-* [[`cf97c56dab`](https://github.com/nodejs/node/commit/cf97c56dab)] - **(SEMVER-MINOR)** **fs**: implement lutimes (Maël Nison) [#33399](https://github.com/nodejs/node/pull/33399)
-* [[`70398dbf60`](https://github.com/nodejs/node/commit/70398dbf60)] - **(SEMVER-MINOR)** **crypto**: allow KeyObjects in postMessage (Tobias Nießen) [#33360](https://github.com/nodejs/node/pull/33360)
-* [[`a24b8df7fb`](https://github.com/nodejs/node/commit/a24b8df7fb)] - **(SEMVER-MINOR)** **http**: expose host and protocol on ClientRequest (wenningplus) [#33803](https://github.com/nodejs/node/pull/33803)
-* [[`4a37180b09`](https://github.com/nodejs/node/commit/4a37180b09)] - **(SEMVER-MINOR)** **worker**: emit `'messagerror'` events for failed deserialization (Anna Henningsen) [#33772](https://github.com/nodejs/node/pull/33772)
-* [[`5b1fd10048`](https://github.com/nodejs/node/commit/5b1fd10048)] - **(SEMVER-MINOR)** **worker,fs**: make FileHandle transferable (Anna Henningsen) [#33772](https://github.com/nodejs/node/pull/33772)
-* [[`507a2ef31c`](https://github.com/nodejs/node/commit/507a2ef31c)] - **(SEMVER-MINOR)** **http**: add maxTotalSockets to agent class (rickyes) [#33617](https://github.com/nodejs/node/pull/33617)
-* [[`e1e3ae1567`](https://github.com/nodejs/node/commit/e1e3ae1567)] - **(SEMVER-MINOR)** **http**: return this from OutgoingMessage#destroy() (Colin Ihrig) [#32789](https://github.com/nodejs/node/pull/32789)
-* [[`d87031def4`](https://github.com/nodejs/node/commit/d87031def4)] - **(SEMVER-MINOR)** **http**: return this from ClientRequest#destroy() (Colin Ihrig) [#32789](https://github.com/nodejs/node/pull/32789)
-* [[`c7959557db`](https://github.com/nodejs/node/commit/c7959557db)] - **(SEMVER-MINOR)** **http**: return this from IncomingMessage#destroy() (Colin Ihrig) [#32789](https://github.com/nodejs/node/pull/32789)
-* [[`f151bde312`](https://github.com/nodejs/node/commit/f151bde312)] - **(SEMVER-MINOR)** **dgram**: allow typed arrays in .send() (Sarat Addepalli) [#22413](https://github.com/nodejs/node/pull/22413)
-* [[`f66bb57c13`](https://github.com/nodejs/node/commit/f66bb57c13)] - **(SEMVER-MINOR)** **process**: add unhandled-rejection throw and warn-with-error-code (Dan Fabulich) [#33475](https://github.com/nodejs/node/pull/33475)
-* [[`5362fef3f5`](https://github.com/nodejs/node/commit/5362fef3f5)] - **(SEMVER-MINOR)** **src**: add public APIs to manage v8::TracingController (Anna Henningsen) [#33850](https://github.com/nodejs/node/pull/33850)
-* [[`c1f625fe1f`](https://github.com/nodejs/node/commit/c1f625fe1f)] - **(SEMVER-MINOR)** **zlib**: add `maxOutputLength` option (unknown) [#33516](https://github.com/nodejs/node/pull/33516)
-* [[`d194d20828`](https://github.com/nodejs/node/commit/d194d20828)] - **(SEMVER-MINOR)** **cli**: add alias for report-directory to make it consistent (AshCripps) [#33587](https://github.com/nodejs/node/pull/33587)
-* [[`0ef6e0426f`](https://github.com/nodejs/node/commit/0ef6e0426f)] - **(SEMVER-MINOR)** **win**: allow skipping the supported platform check (João Reis) [#33176](https://github.com/nodejs/node/pull/33176)
-* [[`1c70b18da8`](https://github.com/nodejs/node/commit/1c70b18da8)] - **(SEMVER-MINOR)** **events**: initial implementation of experimental EventTarget (James M Snell) [#33556](https://github.com/nodejs/node/pull/33556)
-* [[`7ccb021ffc`](https://github.com/nodejs/node/commit/7ccb021ffc)] - **(SEMVER-MINOR)** **http2**: do not modify explicity set date headers (Pranshu Srivastava) [#33160](https://github.com/nodejs/node/pull/33160)
-* [[`1123425dd1`](https://github.com/nodejs/node/commit/1123425dd1)] - **(SEMVER-MINOR)** **deps**: update V8 to 8.3.110.9 (Michaël Zasso) [#33376](https://github.com/nodejs/node/pull/33376)
-* [[`a3a0c0e0fc`](https://github.com/nodejs/node/commit/a3a0c0e0fc)] - **(SEMVER-MINOR)** **http**: added scheduling option to http agent (delvedor) [#33278](https://github.com/nodejs/node/pull/33278)
+#### V8 engine is updated to version 8.3
+
+This version includes performance improvements and now allows WebAssembly
+modules to request memories up to 4GB in size.
+
+For more information, have a look at the [official V8 blog post](https://v8.dev/blog/v8-release-83).
+
+Contributed by Matheus Marchini and Michaël Zasso - [#33376](https://github.com/nodejs/node/pull/33376).
+
+#### Other notable changes
+
+TODO
 
 ### Commits
 
