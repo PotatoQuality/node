@@ -12,7 +12,7 @@ Last update:
 
 - console: https://github.com/web-platform-tests/wpt/tree/b0daaa6b86/console
 - encoding: https://github.com/web-platform-tests/wpt/tree/ab733fd9f5/encoding
-- url: https://github.com/web-platform-tests/wpt/tree/3696f2233a/url
+- url: https://github.com/web-platform-tests/wpt/tree/c8cd629083/url
 - resources: https://github.com/web-platform-tests/wpt/tree/abfd8c9729/resources
 - interfaces: https://github.com/web-platform-tests/wpt/tree/3cbf8e150b/interfaces
 - html/webappapis/microtask-queuing: https://github.com/web-platform-tests/wpt/tree/2c5c3c4c27/html/webappapis/microtask-queuing

@@ -442,7 +442,10 @@ class WPTRunner {
       GLOBAL: {
         isWindow() { return false; }
       },
-      Object
+      Object,
+      Error,
+      RangeError,
+      TypeError,
     };
 
     return result;
